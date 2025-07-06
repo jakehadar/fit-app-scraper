@@ -20,14 +20,12 @@ class Exercise:
     id: int
     fk_lesson: int
     canonical_id: int
-    fk_exercise_group: int
+    fk_exercise_group: Optional[int]
     title: str
     video_low: Optional[str]
     tutorial_video_low: Optional[str]
     description: Optional[str]
-    type: str
     verbose_cues: Optional[int]
-    sets_count: int
     number_of_reps: Optional[int]
     sequence: int
     recommended_duration_in_secs: Optional[int]
@@ -35,6 +33,11 @@ class Exercise:
     rest_between_sets_or_reps: Optional[int]
     group_id: Optional[int]
     is_percentage: bool
+
+    # Fields that have defaults applied by the web client (not in the API response) 
+    # See: https://account.joinfitapp.com/workouts/js/exercise.js:146
+    type: str = dataclasses.field(default_factory=lambda: "Generic")
+    sets_count: int = dataclasses.field(default_factory=lambda: 1)
 
 
 @dataclass_json
@@ -56,7 +59,7 @@ class Group:
 class CourseInfo:
     course_id: int
     title: str
-    trainer_name: str
+    trainer_name: Optional[str]
     description: Optional[str]
 
 
@@ -66,7 +69,7 @@ class CourseDetail:
     id: int
     unique_code: str
     title: str
-    description: str
+    description: Optional[str]
     trainer_name: Optional[str]
     number_of_weeks: int
     about_program: Optional[str]

@@ -180,7 +180,7 @@ class FitApp(FitAppClientBase):
         return [instantiate_dataclass(CourseInfo, course) for course in courses_data]
 
     def get_course_and_its_sections(self, course_id, token=None) -> CourseDetail:
-        print('Getting course and its sections')
+        print(f'Getting {course_id=} and its sections')
         json = super().get_course_and_its_sections(course_id, token).json()
         if msg := json.get('msg'):
             print(f'{msg=}')
@@ -188,7 +188,7 @@ class FitApp(FitAppClientBase):
         return instantiate_dataclass(CourseDetail, course_data)
 
     def get_week_and_its_lessons(self, course_id, week, token=None) -> list[LessonInfo]:
-        print('Getting week and its lessons')
+        print(f'Getting {course_id=} {week=} and its lessons')
         json = super().get_week_and_its_lessons(course_id, week, token).json()
         if msg := json.get('msg'):
             print(f'{msg=}')
@@ -196,7 +196,7 @@ class FitApp(FitAppClientBase):
         return [instantiate_dataclass(LessonInfo, lesson) for lesson in lessons_data]
 
     def get_lesson_and_its_exercises(self, lesson_id, token=None) -> LessonDetail:
-        print('Getting lesson and its exercises')
+        print(f'Getting {lesson_id=} and its exercises')
         json = super().get_lesson_and_its_exercises(lesson_id, token).json()
         if msg := json.get('msg'):
             print(f'{msg=}')
@@ -204,7 +204,7 @@ class FitApp(FitAppClientBase):
         return instantiate_dataclass(LessonDetail, lesson_data)
 
     def get_profile(self, token=None):
-        print('Getting profile')
+        print('Getting user profile')
         json = super().get_profile(token).json()
         if msg := json.get('msg'):
             print(f'{msg=}')

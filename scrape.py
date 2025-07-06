@@ -18,8 +18,8 @@ lessons_detail: list[LessonDetail] = []
 all_groups: list[Group] = []
 all_exercises: list[Exercise] = []
 
-for course_info in courses:
-    print(f'Processing course {course_info.course_id} {course_info.title}')
+for i, course_info in enumerate(courses):
+    print(f'Processing course {i+1}/{len(courses)}: {course_info.course_id} {course_info.title}')
     course_id = course_info.course_id
     course_detail = c.get_course_and_its_sections(course_info.course_id)
     for week in range(1, course_detail.number_of_weeks + 1):

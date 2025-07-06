@@ -1,5 +1,5 @@
 # fit-app-scraper
-Save down courses you purchased on joinfitapp.com for posterity and/or importing into a better fitness app.
+Save down courses you purchased on joinfitapp.com for posterity and/or importing into a better fitness app (later on).
 
 ### setup
 `python3 -m venv venv && source ./venv/bin/activate && pip install -r requirements.txt`

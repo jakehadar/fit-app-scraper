@@ -1,3 +1,4 @@
+output/*
 venv/*
 env.sh
 __pycache__

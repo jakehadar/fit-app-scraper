@@ -67,7 +67,7 @@ class CourseDetail:
     unique_code: str
     title: str
     description: str
-    trainer_name: str
+    trainer_name: Optional[str]
     number_of_weeks: int
     about_program: Optional[str]
     sections: list[Section]

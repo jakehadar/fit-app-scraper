@@ -1,24 +1,32 @@
+import os
 import sys
-from client import FitApp
 
 import pandas as pd
 
+from client import FitApp
+from model import CourseInfo, Exercise, Group, LessonDetail, LessonInfo
+
+COURSE_IDS = [50, 44]  # Can get course ids from FitApp client: c.get_courses_and_challenges()
+OUTPUT_DIR = 'output'
+
 # START OF MAIN SCRIPT - modify to suit your needs
-
-course_ids = [50, 44]  # Can get course ids from FitApp client: c.get_courses_and_challenges()
-
-lessons_info = []
-lessons_detail = []
-all_groups = []
-all_exercises = []
 
 c = FitApp()
 
-courses = c.get_courses_and_challenges()
+courses: list[CourseInfo] = c.get_courses_and_challenges()
+lessons_info: list[LessonInfo] = []
+lessons_detail: list[LessonDetail] = []
+all_groups: list[Group] = []
+all_exercises: list[Exercise] = []
 
-for course_id in course_ids:
-    course = c.get_course_and_its_sections(course_id)
-    for week in range(1, course.number_of_weeks + 1):
+for course_info in courses:
+    course_id = course_info.course_id
+    if course_id not in COURSE_IDS:
+        continue
+
+    print(f'Processing course {course_info.title}')
+    course_detail = c.get_course_and_its_sections(course_id)
+    for week in range(1, course_detail.number_of_weeks + 1):
         week_lessons = c.get_week_and_its_lessons(course_id, week)
         for lesson in week_lessons:
             lessons_info.append(lesson)
@@ -33,15 +41,18 @@ for course_id in course_ids:
                 print(group)
                 all_groups.append(group)
 
-courses_df = pd.DataFrame(courses)
-lessons_df = pd.DataFrame(lessons_info)
-groups_df = pd.DataFrame(all_groups)
-exercises_df = pd.DataFrame(all_exercises)
+# Export scraped data - can do whatever you want here csv used as an example
 
-courses_df.to_csv('courses.csv', index=False)
-lessons_df.to_csv('lessons.csv', index=False)
-groups_df.to_csv('groups.csv', index=False)
-exercises_df.to_csv('exercises.csv', index=False)
+df_courses = pd.DataFrame(courses)
+df_lessons = pd.DataFrame(lessons_info)
+df_groups = pd.DataFrame(all_groups)
+df_exercises = pd.DataFrame(all_exercises)
+
+os.makedirs(OUTPUT_DIR, exist_ok=True)
+df_courses.to_csv(os.path.join(OUTPUT_DIR, 'courses.csv'), index=False)
+df_lessons.to_csv(os.path.join(OUTPUT_DIR, 'lessons.csv'), index=False)
+df_groups.to_csv(os.path.join(OUTPUT_DIR, 'groups.csv'), index=False)
+df_exercises.to_csv(os.path.join(OUTPUT_DIR, 'exercises.csv'), index=False)
 
 c.close()
 sys.exit(0)

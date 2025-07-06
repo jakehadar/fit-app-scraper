@@ -11,7 +11,7 @@ class Section:
     id: int
     fk_course: int
     title: str
-    link_url: str
+    link_url: Optional[str]
 
 
 @dataclass_json
@@ -19,20 +19,20 @@ class Section:
 class Exercise:
     id: int
     fk_lesson: int
+    title: str
+    sequence: int
+    is_percentage: bool
     canonical_id: Optional[int]
     fk_exercise_group: Optional[int]
-    title: str
     video_low: Optional[str]
     tutorial_video_low: Optional[str]
     description: Optional[str]
     verbose_cues: Optional[int]
     number_of_reps: Optional[int]
-    sequence: int
     recommended_duration_in_secs: Optional[int]
     recommended_weight_in_gms: Optional[int]
     rest_between_sets_or_reps: Optional[int]
-    group_id: Optional[int]
-    is_percentage: bool
+    group_id: Optional[str]
 
     # Fields that have defaults applied by the web client (not in the API response) 
     # See: https://account.joinfitapp.com/workouts/js/exercise.js:146
@@ -46,11 +46,11 @@ class Group:
     id: int
     exercise_group: str
     fk_lesson: int
-    duration_in_seconds: Optional[int]
     amrap: bool
     label: str
-    instructions: Optional[str]
     type: str
+    duration_in_seconds: Optional[int]
+    instructions: Optional[str]
     parent_group_id: Optional[int]
 
 
@@ -69,11 +69,11 @@ class CourseDetail:
     id: int
     unique_code: str
     title: str
+    number_of_weeks: int
     description: Optional[str]
     trainer_name: Optional[str]
-    number_of_weeks: int
     about_program: Optional[str]
-    sections: list[Section]
+    sections: list[Section] = dataclasses.field(default_factory=list)
 
 
 @dataclass_json
@@ -82,9 +82,9 @@ class LessonInfo:
     id: int
     fk_course: int
     title: str
-    description: Optional[str]
     week: int
-    day: int
+    day: Optional[int]
+    description: Optional[str]
     sequence: Optional[int]
     is_difficult: Optional[bool] = dataclasses.field(default_factory=lambda: False)
 

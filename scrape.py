@@ -1,8 +1,9 @@
+import sys
 from client import FitApp
 
 import pandas as pd
 
-# START OF MAIN SCRIPT
+# START OF MAIN SCRIPT - modify to suit your needs
 
 course_ids = [50, 44]  # Can get course ids from FitApp client: c.get_courses_and_challenges()
 
@@ -43,4 +44,4 @@ groups_df.to_csv('groups.csv', index=False)
 exercises_df.to_csv('exercises.csv', index=False)
 
 c.close()
-exit(0)
+sys.exit(0)

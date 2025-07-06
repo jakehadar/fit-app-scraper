@@ -19,7 +19,7 @@ class Section:
 class Exercise:
     id: int
     fk_lesson: int
-    canonical_id: int
+    canonical_id: Optional[int]
     fk_exercise_group: Optional[int]
     title: str
     video_low: Optional[str]
@@ -36,8 +36,8 @@ class Exercise:
 
     # Fields that have defaults applied by the web client (not in the API response) 
     # See: https://account.joinfitapp.com/workouts/js/exercise.js:146
-    type: str = dataclasses.field(default_factory=lambda: "Generic")
-    sets_count: int = dataclasses.field(default_factory=lambda: 1)
+    type: Optional[str] = dataclasses.field(default_factory=lambda: "Generic")
+    sets_count: Optional[int] = dataclasses.field(default_factory=lambda: 1)
 
 
 @dataclass_json
@@ -82,22 +82,27 @@ class LessonInfo:
     id: int
     fk_course: int
     title: str
-    description: str
+    description: Optional[str]
     week: int
     day: int
-    is_difficult: bool
-    sequence: int
+    sequence: Optional[int]
+    is_difficult: Optional[bool] = dataclasses.field(default_factory=lambda: False)
 
 
 @dataclass_json
 @dataclass
 class LessonDetail(LessonInfo):
-    groups: list[Group]
-    exercises: list[Exercise]
+    groups: list[Group] = dataclasses.field(default_factory=list)
+    exercises: list[Exercise] = dataclasses.field(default_factory=list)
 
 
 def instantiate_dataclass(cls, data_dict: dict) -> Any:
     defined_fields = {field.name for field in dataclasses.fields(cls)}
     filtered_data = {k: v for k, v in data_dict.items() if k in defined_fields}
-    instance = cls.from_dict(filtered_data)
+    try:
+        instance = cls.from_dict(filtered_data)
+    except Exception as e:
+        print(f'Error instantiating {cls.__name__}: {e}')
+        print(f'{filtered_data=}')
+        raise e
     return instance
